@@ -2,7 +2,7 @@
 
 ### Overview
 
-A program to create visual representations for protein binding motifs in a gene. The user provides a fasta file of gene sequences and a text file of motifs to search for in the genes. The program outputs a .svg image with the location of motifs visualized for each gene. All genes are scaled to be visually represented at the same size, but relative sizes of motifs and exons are preserved. Only provided sequences are searched, reverse compliments are not considered. Motifs are represented with colored boxes spanning the full region of the gene that matches the motif, which may be longer than the motif sequence. No mismatches are allowed. Ambiguous bases (N) in the gene sequence are not treated as matches. Exons are represented by grey boxes, introns are black lines. This program was written for an assignment. 
+A program to create visual representations for protein binding motifs in a gene. The user provides a fasta file of gene sequences and a text file of motifs to search for in the genes. The program outputs a .svg image with the location of motifs visualized for each gene. All genes are scaled to be visually represented at the same size, but relative sizes of motifs and exons are preserved. Only provided sequences are searched, reverse compliments are not considered. Motifs are represented with colored boxes spanning the full region of the gene that matches the motif, which may be longer than the motif sequence. No mismatches are allowed. Ambiguous bases (N) in the gene sequence are not treated as matches. Exons are represented by grey boxes, introns are black lines. Note that motif colors are randomly generated, and will change on reruns. This program was written for an assignment. 
 
 ### Runtime options
 
