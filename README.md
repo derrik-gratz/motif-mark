@@ -6,8 +6,10 @@ A program to create visual representations for protein binding motifs in a gene.
 
 ### Runtime options
 
-| -f | Input FASTA |
-| -m | Motifs      |
+| Command | Input  |
+|---------|--------|
+| -f      | FASTA  |
+| -m      | Motifs |
 
 ### Input requirements
 
