@@ -31,7 +31,6 @@ def get_args():
     '''
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', "--file", type=str, help="The input sequences in fasta format")
-    parser.add_argument('-o', "--output_directory", type=str, help="What directory to put the output file")
     parser.add_argument('-m', "--motifs", type=str, help="Text file containing motifs, 1 per line")
     return parser.parse_args()
 
@@ -122,14 +121,14 @@ def motif_finder(sequence, motif):
     return [(locations) for number, locations in motif_locations.items()]
 
 
-def generate_pallete(N):
+def generate_pallete(motifs):
     '''
     Create list of randomly generated RBG values for each motif, to be used in graphical representation
     '''
     colors = {}
-    for x in range(N):
-        r,g,b = random(), random(), random()
-        colors[x] = [r,g,b]
+    for motif in motifs:
+        r,g,b,a = random(), random(), random(), 0.5
+        colors[motif] = [r,g,b,a]
     return colors
 
 
@@ -174,7 +173,8 @@ def drawing(gene_objects, output_name, pallete, sequence_file, motif_file, motif
             #add the name of each gene/fasta entry above the visual
             x3, y3 = width * .09, base_height * .1 + base_height * gene_count
             context.move_to(x3, y3)
-            context.show_text(gene)
+            gene_name = gene + "    {} BP".format(len(gene_objects[gene].sequence))
+            context.show_text(gene_name)
             context.stroke()
             #find length of gene to scale motifs and exons accordingly
             gene_length = len(gene_objects[gene].sequence)
@@ -190,7 +190,6 @@ def drawing(gene_objects, output_name, pallete, sequence_file, motif_file, motif
                 context.rectangle(exon_x1, exon_y1, exon_width, exon_height)
                 context.set_source_rgb(.6,.6,.6)
                 context.fill()
-            motif_count = 0
             #now iterating through each motif found in this sequence
             for motif in gene_objects[gene].motifs:
                 #grabbing BP coordinates for where the motifs matched the sequence (often more than one)
@@ -201,10 +200,9 @@ def drawing(gene_objects, output_name, pallete, sequence_file, motif_file, motif
                     re_height = base_height * .2
                     context.rectangle(re_x1, base_height * .4 + base_height * gene_count, re_width, re_height)
                     #uses the same color for same motifs
-                    r,g,b = pallete[motif_count]
-                    context.set_source_rgb(r,g,b)
+                    r,g,b,a = pallete[motif]
+                    context.set_source_rgba(r,g,b,a)
                     context.fill()
-                motif_count += 1
             gene_count += 1
         #adding figure title
         context.move_to(width * 0.1, base_height * 0.5)
@@ -232,14 +230,14 @@ def drawing(gene_objects, output_name, pallete, sequence_file, motif_file, motif
             context.move_to(x1, y1)
             #cute lil boxes
             context.rectangle(x1,y1,base_height*0.05, base_height * 0.05)
-            r,g,b = pallete[motif_count]
-            context.set_source_rgb(r,g,b)
+            r,g,b,a = pallete[motifs[motif]]
+            context.set_source_rgba(r,g,b,a)
             context.fill()
             #write the original motif
             x1, y1 = x1 + base_height * 0.07, y1 + base_height * 0.07
             context.move_to(x1,y1)
             context.set_source_rgb(0,0,0)
-            context.show_text(motifs[motif])
+            context.show_text(motifs[motif].upper())
             motif_count += 1
 
 
@@ -273,7 +271,7 @@ def main():
                 #if motif appears at least once in sequence, store it in object
                 genes[gene].add_motif(nucleotide_motif, motif_locations)
     #making a color pallete for visual representation of motifs
-    pallete = generate_pallete(len(motifs))
+    pallete = generate_pallete(motifs.values())
     #the name of the file to output
     output_name = args.file.split(".")[0]
     #passing in gene objects, color pallete, motifs, filenames, etc into drawing function for visual output
